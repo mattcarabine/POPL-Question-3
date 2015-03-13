@@ -30,6 +30,11 @@ public class Stable extends Thread{
                 Thread t = (new Thread(project));
                 t.start();
             }
+            try {
+                this.sleep(1000);
+            } catch (InterruptedException ex) {
+
+            }
         } while (!checkFinished());
     }
 

@@ -3,37 +3,45 @@ import java.util.Random;
 
 
 public class Project implements Runnable {
-    ArrayList<Student> preferences = new ArrayList<Student>();
-    ArrayList<Student> proposers = new ArrayList<Student>();
+    private ArrayList<Student> preferences = new ArrayList<Student>();
+    private ArrayList<Student> proposers = new ArrayList<Student>();
     public int ID;
     public Student student;
 
     public Project(int ID){
         this.ID = ID;
+        this.student = null;
     }
 
     public void run(){
+       printProposers();
+        String s = "";
         if (this.student!=null) {
-            System.out.println("Project " + ID + ": previous student was " + student.ID);
+           s=s.concat("Project " + ID + ": previous student was " + student.ID);
             this.student.project = null;
         } else{
-            System.out.println("Project " + ID + ": No previous student");
+            s=s.concat("Project " + ID + ": No previous student");
         }
+
         for (Student student:proposers){
             student.project = null;
         }
-        Student student = findHighestPref();
-        if (student!=null) {
-            student.project = this;
+
+        Student newStudent = findHighestPref();
+
+        if (newStudent!=null) {
+            newStudent.project = this;
         }
-        this.student = student;
+
+        this.student = newStudent;
 
         if (student!=null) {
-            System.out.println("Project " + ID + ":current student is " + student.ID);
+           s=s.concat(", Current student is " + student.ID);
         } else{
-            System.out.println("Project " + ID + ": No current student");
+           s=s.concat(", No current student");
         }
-        proposers.clear();
+        System.out.println(s);
+        proposers = new ArrayList<Student>();
     }
 
     public void generatePreferences(ArrayList<Student> students){
@@ -52,11 +60,25 @@ public class Project implements Runnable {
     }
 
     private Student findHighestPref(){
-        for (Student student:preferences){
-            if (proposers.contains(student)||student.equals(this.student)){
-                return student;
+        for (Student studentPref:preferences){
+            if (this.student!=null)
+                if (studentPref.ID==this.student.ID)
+                    return studentPref;
+           for (Student studentProp:proposers) {
+                   if (studentPref.ID == studentProp.ID){
+                       return studentPref;
+                   }
             }
         }
         return null;
     }
+
+    private void printProposers(){
+        String s = "Project " + ID + ":proposers ";
+        for (Student student:proposers){
+           s = s.concat(student.ID+ ",");
+        }
+        System.out.println(s);
+    }
+
 }

@@ -8,6 +8,7 @@ public class Student implements Runnable {
 
     public Student(int ID){
         this.ID = ID;
+        project = null;
     }
 
     public void generatePreferences(ArrayList<Project> projects){
